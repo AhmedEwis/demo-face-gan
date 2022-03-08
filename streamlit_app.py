@@ -6,6 +6,7 @@ import sys
 import tensorflow as tf
 import urllib
 import pympler
+from pympler import asizeof
 from pympler import muppy
 from pympler import summary
 from pympler import tracker
