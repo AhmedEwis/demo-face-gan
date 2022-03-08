@@ -5,6 +5,10 @@ import streamlit as st
 import sys
 import tensorflow as tf
 import urllib
+import pympler
+from pympler import muppy
+from pympler import summary
+from pympler import tracker
 
 sys.path.append("tl_gan")
 sys.path.append("pg_gan")
