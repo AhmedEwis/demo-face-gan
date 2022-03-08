@@ -5,6 +5,7 @@ import streamlit as st
 import sys
 import tensorflow as tf
 import urllib
+!pip install pympler
 import pympler
 from pympler import asizeof
 from pympler import muppy
