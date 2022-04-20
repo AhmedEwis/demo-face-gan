@@ -205,7 +205,7 @@ def train_progressive_gan(
     misc.save_image_grid(grid_fakes, os.path.join(result_subdir, 'fakes%06d.png' % 0), drange=drange_net, grid_size=grid_size)
     summary_log = tf.summary.FileWriter(result_subdir)
     if save_tf_graph:
-        summary_log.add_graph(tf.get_default_graph())
+        summary_log.add_graph(tf.compat.v1.get_default_graph())
     if save_weight_histograms:
         G.setup_weight_histograms(); D.setup_weight_histograms()
 
