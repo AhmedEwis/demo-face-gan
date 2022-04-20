@@ -88,7 +88,7 @@ def init_uninited_vars(vars=None):
         for var in vars:
             assert is_tf_expression(var)
             try:
-                tf.get_default_graph().get_tensor_by_name(var.name.replace(':0', '/IsVariableInitialized:0'))
+                tf.compat.v1.get_default_graph().get_tensor_by_name(var.name.replace(':0', '/IsVariableInitialized:0'))
             except KeyError:
                 # Op does not exist => variable may be uninitialized.
                 test_vars.append(var)
@@ -108,7 +108,7 @@ def set_vars(var_to_value_dict):
     for var, value in var_to_value_dict.items():
         assert is_tf_expression(var)
         try:
-            setter = tf.get_default_graph().get_tensor_by_name(var.name.replace(':0', '/setter:0')) # look for existing op
+            setter = tf.compat.v1.get_default_graph().get_tensor_by_name(var.name.replace(':0', '/setter:0')) # look for existing op
         except KeyError:
             with absolute_name_scope(var.name.split(':')[0]):
                 with tf.control_dependencies(None): # ignore surrounding control_dependencies
@@ -259,7 +259,7 @@ class Optimizer:
         self.name               = name
         self.learning_rate      = tf.convert_to_tensor(learning_rate)
         self.id                 = self.name.replace('/', '.')
-        self.scope              = tf.get_default_graph().unique_name(self.id)
+        self.scope              = tf.compat.v1.get_default_graph().unique_name(self.id)
         self.optimizer_class    = import_obj(tf_optimizer)
         self.optimizer_kwargs   = dict(kwargs)
         self.use_loss_scaling   = use_loss_scaling
@@ -465,7 +465,7 @@ class Network:
         # Choose name and scope.
         if self.name is None:
             self.name = self._build_func_name
-        self.scope = tf.get_default_graph().unique_name(self.name.replace('/', '_'), mark_as_used=False)
+        self.scope = tf.compat.v1.get_default_graph().unique_name(self.name.replace('/', '_'), mark_as_used=False)
         
         # Build template graph.
         with tf.variable_scope(self.scope, reuse=tf.AUTO_REUSE):
@@ -688,7 +688,7 @@ class Network:
     # individual layers of the network. Mainly intended to be used for reporting.
     def list_layers(self):
         patterns_to_ignore = ['/Setter', '/new_value', '/Shape', '/strided_slice', '/Cast', '/concat']
-        all_ops = tf.get_default_graph().get_operations()
+        all_ops = tf.compat.v1.get_default_graph().get_operations()
         all_ops = [op for op in all_ops if not any(p in op.name for p in patterns_to_ignore)]
         layers = []
 
